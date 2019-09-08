@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // 스키마 정의
 const todoSchema = new mongoose.Schema({
-  id : { type : Number, required : true, unique : true},
+  id : mongoose.Schema.Types.ObjectId,
   text : { type : String, required : true},
   complete : { type : Boolean, default : false}
 },
@@ -25,18 +25,18 @@ todoSchema.statics.findAll = function() {
 }
 
 // Find One by todoid
-todoSchema.statics.findOneByTodoid = function(id) {
-  return this.findOne({id})
+todoSchema.statics.findOneByTodoid = function(_id) {
+  return this.findOne({_id})
 }
 
 // Update by todoid
-todoSchema.statics.updateByTodoid = function(id, payload) {
-  return this.findOneAndUpate({id}, payload, {new : true});
+todoSchema.statics.updateByTodoid = function(_id, payload) {
+  return this.updateOne({_id}, payload, {new : true});
 }
 
 // Delete by todoid
-todoSchema.statics.deleteByTodoid = function(id) {
-  return this.remove({id})
+todoSchema.statics.deleteByTodoid = function(_id) {
+  return this.remove({_id})
 }
 
 // Create Model and Export

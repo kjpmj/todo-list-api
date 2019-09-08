@@ -6,7 +6,7 @@ const Todo = require('../model/todo');
 router.get('/', (req, res) => {
   Todo.findAll()
     .then((todos) => {
-      if(!todos.length) return res.status(404).send({err : 'Todo not Found'});
+      // if(!todos.length) return res.status(404).send({err : 'Todo not Found'});
       res.json(todos);
     })
     .catch(err => res.status(500).send(err));
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   Todo.findOneByTodoid(req.params.id)
     .then((todo) => {
-      if(!todo) return res.status(404).send({err : 'Todo not Found'});
+      // if(!todo) return res.status(404).send({err : 'Todo not Found'});
       res.json({todo});
     })
     .catch(err => res.status(500).send(err));
@@ -25,21 +25,24 @@ router.get('/:id', (req, res) => {
 // Create new todo document
 router.post('/', (req, res) => {
   Todo.create(req.body)
-    .then(todo => res.json(todo))
+    .then(todo => Todo.findAll())
+    .then(todos => res.json(todos))
     .catch(err => res.status(500).send(err));
 });
 
 // Update by todoid
-router.patch('/:id', (req, res) => {
+router.put('/:id', (req, res) => {
   Todo.updateByTodoid(req.params.id, req.body)
-    .then(todo => res.json(todo))
+    .then(todo => Todo.findAll())
+    .then(todos => res.json(todos))
     .catch(err => res.status(500).send(err));
 });
 
 // Delete by todoid
 router.delete('/:id', (req, res) => {
   Todo.deleteByTodoid(req.params.id)
-    .then(() => res.sendStatus(200))
+    .then(() => Todo.findAll())
+    .then(todos => res.json(todos))
     .catch(err => res.status(500).send(err));
 });
 
